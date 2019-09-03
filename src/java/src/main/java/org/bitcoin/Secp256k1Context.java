@@ -21,38 +21,31 @@ package org.bitcoin;
  * to handle ECDSA operations.
  */
 public class Secp256k1Context {
-  private static final boolean enabled; //true if the library is loaded
-  private static final long context; //ref to pointer to context obj
+  private final boolean enabled; //true if the library is loaded
+  private final long context; //ref to pointer to context obj
 
-  static { //static initializer
-      boolean isEnabled = true;
-      long contextRef = -1;
-      try {
-          if ("The Android Project".equals(System.getProperty("java.vm.vendor"))) {
-              System.loadLibrary("secp256k1");
-          } else {
-              fr.acinq.Secp256k1Loader.initialize();
-          }
-          contextRef = secp256k1_init_context();
-      } catch (java.lang.UnsatisfiedLinkError e) {
-          System.out.println("Cannot load secp256k1 native library: " + e.toString());
-          isEnabled = false;
-      } catch (Exception e) {
-          System.out.println("Cannot load secp256k1 native library: " + e.toString());
-          isEnabled = false;
-      }
-      enabled = isEnabled;
-      context = contextRef;
+  public Secp256k1Context() {
+    boolean isEnabled = true;
+    long contextRef = -1;
+    try {
+      System.loadLibrary("secp256k1");
+      contextRef = secp256k1_init_context();
+    } catch (UnsatisfiedLinkError e) {
+      System.out.println("UnsatisfiedLinkError: " + e.toString());
+      isEnabled = false;
+    }
+    enabled = isEnabled;
+    context = contextRef;
   }
 
-  public static boolean isEnabled() {
-     return enabled;
+  public boolean isEnabled() {
+    return enabled;
   }
 
-  public static long getContext() {
-     if(!enabled) return -1; //sanity check
-     return context;
+  public long getContext() {
+    if(!enabled) return -1; //sanity check
+    return context;
   }
 
-  private static native long secp256k1_init_context();
+  private native long secp256k1_init_context();
 }
