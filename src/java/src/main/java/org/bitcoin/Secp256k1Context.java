@@ -28,10 +28,17 @@ public class Secp256k1Context {
     boolean isEnabled = true;
     long contextRef = -1;
     try {
-      System.loadLibrary("secp256k1");
+      if ("The Android Project".equals(System.getProperty("java.vm.vendor"))) {
+        System.loadLibrary("secp256k1");
+      } else {
+        fr.acinq.Secp256k1Loader.initialize();
+      }
       contextRef = secp256k1_init_context();
-    } catch (UnsatisfiedLinkError e) {
-      System.out.println("UnsatisfiedLinkError: " + e.toString());
+    } catch (java.lang.UnsatisfiedLinkError e) {
+      System.out.println("Cannot load secp256k1 native library: " + e.toString());
+      isEnabled = false;
+    } catch (Exception e) {
+      System.out.println("Cannot load secp256k1 native library: " + e.toString());
       isEnabled = false;
     }
     enabled = isEnabled;
@@ -47,5 +54,5 @@ public class Secp256k1Context {
     return context;
   }
 
-  private native long secp256k1_init_context();
+  private static native long secp256k1_init_context();
 }
