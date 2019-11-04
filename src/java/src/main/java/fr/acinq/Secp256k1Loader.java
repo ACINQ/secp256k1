@@ -32,11 +32,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
- * Set the system properties, org.sqlite.lib.path, org.sqlite.lib.name,
- * appropriately so that the SQLite JDBC driver can find *.dll, *.jnilib and
+ * Set the system properties, fr.acinq.secp256k1.lib.path, fr.acinq.secp256k1.lib.name,
+ * appropriately so that the JVM can find *.dll, *.jnilib and
  * *.so files, according to the current OS (win, linux, mac).
  * The library files are automatically extracted from this project's package (JAR).
- * usage: call {@link #initialize()} before using SQLite JDBC driver.
+ * usage: call {@link #initialize()} before using NativeSecp256k1.
  *
  * @author leo
  */
